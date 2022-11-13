@@ -13,7 +13,7 @@ jobs:
       uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc # 3.6.0
       with:
         java-version: 1.17
-        # The package type (jre, jdk, jdk+fx)
+        distribution: temurin
         java-package: jdk+fx
     - name: Build with Maven
       run: mvn -B package --file pom.xml
