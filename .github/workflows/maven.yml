@@ -3,26 +3,25 @@ name: Java CI
 on: [push]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # 2.5.0
-    - name: Setup Java JDK
-      uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc # 3.6.0
-      with:
-        java-version: '17'
-        distribution: 'zulu'
-        java-package: 'jdk+fx'
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Run Test
-      run: mvn test
-    - name: Upload artifact
-      uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # v3.1.1
-      with:
-        # Artifact name
-        name: "Polymony"
-        # Directory containing files to upload
-        path: "target/polymony-1.0-SNAPSHOT.jar"
+        steps:
+            - uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # 2.5.0
+            - name: Setup Java JDK
+              uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc # 3.6.0
+              with:
+                  java-version: '8'
+                  distribution: 'liberica'
+                  java-package: 'jdk+fx'
+            - name: Build with Maven
+              run: mvn -B package --file pom.xml
+            - name: Run Test
+              run: mvn test
+            - name: Upload artifact
+              uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # v3.1.1
+              with:
+                  # Artifact name
+                  name: 'Polymony'
+                  # Directory containing files to upload
+                  path: 'target/polymony-1.0-SNAPSHOT.jar'
