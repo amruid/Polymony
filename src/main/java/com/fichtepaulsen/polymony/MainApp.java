@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Settings.createInstance();
@@ -18,19 +18,19 @@ public class MainApp extends Application {
         PolyMonyPopup.stage = stage;
 
         Parent parentRoot = null;
-        
+
         try {
             parentRoot = FXMLLoader.load(getClass().getResource("/fxml/MainMenue.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         Scene scene = new Scene(parentRoot, Settings.getInstance().WindowWidth, Settings.getInstance().WindowHeight);
         scene.getStylesheets().add("/styles/Styles.css");
-        
+
         stage.setTitle(Settings.getInstance().WindowTitle);
         stage.setScene(scene);
-        stage.show();        
+        stage.show();
     }
 
     /**

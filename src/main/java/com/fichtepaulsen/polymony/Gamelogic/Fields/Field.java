@@ -4,7 +4,7 @@ import com.fichtepaulsen.polymony.Gamelogic.Game;
 
 public abstract class Field {
     public abstract void action(Game game);
-    
+
     protected int index;
     protected String name;
 

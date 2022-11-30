@@ -1,12 +1,11 @@
 package com.fichtepaulsen.polymony.Gamelogic.Cards;
 
 import com.fichtepaulsen.polymony.Gamelogic.Game;
-import com.fichtepaulsen.polymony.Gamelogic.Player.Player;
 
-public class GoToPrisonCard  extends Card{
-    
-    public GoToPrisonCard(String text,boolean community){
-        super(text,community);
+public class GoToPrisonCard extends Card {
+
+    public GoToPrisonCard(String text, boolean community) {
+        super(text, community);
     }
 
     @Override

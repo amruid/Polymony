@@ -5,14 +5,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PopUpTest {
-    
+
     public PopUpTest() {
     }
-    
+
     @Test
-    public void test() { 
+    public void test() {
         PolyMonyPopup.stage = new Stage();
         PolyMonyPopup.show("Test?", (b) -> System.out.println(b));
     }
 }
-

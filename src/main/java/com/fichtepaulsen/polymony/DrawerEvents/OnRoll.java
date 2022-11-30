@@ -6,19 +6,12 @@ import com.fichtepaulsen.polymony.DoublePair;
 import com.fichtepaulsen.polymony.DrawerController.GamefieldController;
 import com.fichtepaulsen.polymony.Gamelogic.Fields.Field;
 import com.fichtepaulsen.polymony.Gamelogic.Fields.OwnableField;
-import com.fichtepaulsen.polymony.Gamelogic.Fields.StreetField;
 import com.fichtepaulsen.polymony.Gamelogic.Player.Player;
-import com.fichtepaulsen.polymony.IntPair;
 import com.fichtepaulsen.polymony.PolyMonyDrawer;
 import com.fichtepaulsen.polymony.PolyMonyPopup;
-import com.fichtepaulsen.polymony.Settings;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.layout.GridPane;
 import com.fichtepaulsen.polymony.Settings;
-import javafx.scene.control.Button;
 import javafx.animation.PathTransition;
-import javafx.animation.PathTransition.OrientationType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,16 +22,12 @@ import java.util.logging.Logger;
 
 public class OnRoll extends Drawer {
 
-    //interval of the x coordinates of the players
+    // interval of the x coordinates of the players
     private final double minX = 0.1;
     private final double maxX = 0.65;
-    private final double offX = 1;
-    private final double offY = 1;
-    private final double dimX = 50;
-    private final double dimY = 100;
 
     public OwnableField currentField;
-  
+
     public OnRoll(GameInterface ga, Stage st) {
         super(ga, st);
     }
@@ -49,75 +38,68 @@ public class OnRoll extends Drawer {
 
     @Override
     public void handle() {
-                   
+
         Player currentPlayer = gameLogic.getCurrentPlayer();
-        
-        //save the old position before calling gamelogic and moving
+
+        // save the old position before calling gamelogic and moving
         int oldPosition = currentPlayer.getPosition();
 
         showDice();
 
-        //move the player using an animation
+        // move the player using an animation
         drawPlayerWithAnimation(currentPlayer, 1200, oldPosition);
     }
 
     public void drawPlayerWithAnimation(Player p, int duration, int oldPosition) {
-
-        //make an ad hoc travel class to calculate how many corners have been
-        //passed by the player and later access the path for the movement
-        Travel travel = new Travel();
-        log(Level.INFO, "oldPosition: " + oldPosition + ", newPosition: " + p.getPosition());
-        
-        travel.calculateCornersPassed(oldPosition, p.getPosition());
-
         if (p == null) {
             log(Level.SEVERE, "Player is null");
         }
-        else {
-            if (getPlayerNode(p.getIndex()) == null) {
-                log(Level.SEVERE, "Player's Shape is null");
-            }
+        // make an ad hoc travel class to calculate how many corners have been
+        // passed by the player and later access the path for the movement
+        Travel travel = new Travel();
+        log(Level.INFO, "oldPosition: " + oldPosition + ", newPosition: " + p.getPosition());
 
-            PathTransition anim = new PathTransition(
-                    Duration.millis(duration),
-                    travel.getPlayerTransitionPath(p, oldPosition),
-                    getPlayerNode(p.getIndex()));
+        travel.calculateCornersPassed(oldPosition, p.getPosition());
 
-            if (anim == null) {
-                log(Level.SEVERE, "Animation couldn't be started (PathTransition is null)");
-            } else {
-                anim.play();
-            }
+        if (getPlayerNode(p.getIndex()) == null) {
+            log(Level.SEVERE, "Player's Shape is null");
         }
+
+        PathTransition anim = new PathTransition(
+                Duration.millis(duration),
+                travel.getPlayerTransitionPath(p, oldPosition),
+                getPlayerNode(p.getIndex()));
+
+        anim.play();
     }
 
     private class Travel {
 
-        //one boolean value for each corner (0 is bottom right, then clockwise)
+        // one boolean value for each corner (0 is bottom right, then clockwise)
         boolean[] cornersPassed = new boolean[4];
 
-        //empty constructor - cornersPassed is already initialized
+        // empty constructor - cornersPassed is already initialized
         public Travel() {
         }
 
-        //gets: a player who just moved
-        //does: returns a path of the movement the player should
-        //      perform
+        // gets: a player who just moved
+        // does: returns a path of the movement the player should
+        // perform
         public Path getPlayerTransitionPath(Player p, int oldPosition) {
 
-            //contains the return value
+            // contains the return value
             Path path = new Path();
 
-            //calculate the starting position of the player, where the animation
-            //starts from
+            // calculate the starting position of the player, where the animation
+            // starts from
             DoublePair startPosition = fieldPosition(oldPosition,
                     p.getIndex(),
                     Settings.getInstance().playerRadius);
 
-            //flag as to whether any corners have been passed
+            // flag as to whether any corners have been passed
             boolean passedCorner = false;
 
-            //for a point where the player should change direction or stop
+            // for a point where the player should change direction or stop
             DoublePair checkpoint;
 
             for (int i = 0; i < 4; ++i) {
@@ -125,11 +107,11 @@ public class OnRoll extends Drawer {
 
                     log(Level.INFO, "Passed corner " + i);
 
-                    //calculate the x and y coordinates of the player if it
-                    //were standing on the current corner
+                    // calculate the x and y coordinates of the player if it
+                    // were standing on the current corner
                     checkpoint = fieldPosition(i * 10, p.getIndex(), Settings.getInstance().playerRadius);
 
-                    //add that corner to the path
+                    // add that corner to the path
                     path.getElements().add(new LineTo(checkpoint.getX(), checkpoint.getY()));
 
                     passedCorner = true;
@@ -137,19 +119,18 @@ public class OnRoll extends Drawer {
             }
 
             checkpoint = fieldPosition(p.getPosition(), p.getIndex(), Settings.getInstance().playerRadius);
-            //add the player's final position to the path as well
+            // add the player's final position to the path as well
 
-            //only add start and end if the player has actually moved,
-            //otherwise return an empty path
+            // only add start and end if the player has actually moved,
+            // otherwise return an empty path
             if (p.getPosition() != oldPosition || passedCorner) {
 
-                //start from the player's current position
+                // start from the player's current position
                 path.getElements().add(0, new MoveTo(startPosition.getX(), startPosition.getY()));
 
-                //also add the final position
+                // also add the final position
                 path.getElements().add(
-                        new LineTo(checkpoint.getX(), checkpoint.getY())
-                );
+                        new LineTo(checkpoint.getX(), checkpoint.getY()));
             }
 
             log(Level.INFO, "Path: ");
@@ -163,20 +144,20 @@ public class OnRoll extends Drawer {
 
         public void calculateCornersPassed(int oldIndex, int newIndex) {
             int rowLength = Settings.getInstance().rowLength;
-            
-            //special case for passed over go
+
+            // special case for passed over go
             if (newIndex < oldIndex) {
                 cornersPassed[0] = true;
             }
 
             for (int i = 1; i < 4; ++i) {
-                //if the player was previously before this corner but is now after 
-                //it, the player has passed it
+                // if the player was previously before this corner but is now after
+                // it, the player has passed it
                 if (oldIndex < i * rowLength && newIndex > i * rowLength) {
-                    cornersPassed[i] = true; 
-                    
+                    cornersPassed[i] = true;
+
                     log(Level.INFO, "Went over corner " + i);
-                } 
+                }
             }
         }
     }
@@ -185,89 +166,91 @@ public class OnRoll extends Drawer {
         return GamefieldController.getPlayerNode(Settings.getInstance().gameStackPane, index);
     }
 
-    //gets: a field position, the player's index and an offset towards the top left of the field
-    //does: returns a DoublePair with the coordiantes
+    // gets: a field position, the player's index and an offset towards the top left
+    // of the field
+    // does: returns a DoublePair with the coordiantes
     private DoublePair fieldPosition(int position, int playerIndex, double offset) {
         double longSide = Settings.getInstance().fieldWidth;
         double shortSide = Settings.getInstance().fieldHeight;
-        
-        //the players position inside the field relative to the top left corner, accounting for rotation
+
+        // the players position inside the field relative to the top left corner,
+        // accounting for rotation
         DoublePair insideField = insideFieldOffsets(playerIndex, position, maxX, minX, shortSide, longSide);
 
-        //the top left corner of the field 
+        // the top left corner of the field
         DoublePair fieldCorner = DoublePair.indexToPoint(position,
                 Settings.getInstance().rowLength, shortSide, longSide);
 
-        return new DoublePair(fieldCorner.getX() + insideField.getX() - offset, 
-                              fieldCorner.getY() + insideField.getY() - offset);
+        return new DoublePair(fieldCorner.getX() + insideField.getX() - offset,
+                fieldCorner.getY() + insideField.getY() - offset);
     }
 
-    //gets: index of player whose position in a field should be calculated
-    //does: calculates the position of the n-th player in a single field
-    //      (0,0) is the top left corner the field and (1,1) the bottom right
-    private DoublePair insideFieldOffsets(int player, int position, double min, double max, double shortSide, double longSide) {
+    // gets: index of player whose position in a field should be calculated
+    // does: calculates the position of the n-th player in a single field
+    // (0,0) is the top left corner the field and (1,1) the bottom right
+    private DoublePair insideFieldOffsets(int player, int position, double min, double max, double shortSide,
+            double longSide) {
 
-        //number of players playing the game
+        // number of players playing the game
         int numP = Settings.getInstance().numberOfPlayers;
 
-        //the space between two player's paths
+        // the space between two player's paths
         double spacing;
 
-        //variable coordinate is the minimum plus a certain spacing
+        // variable coordinate is the minimum plus a certain spacing
         double variable;
 
         if (numP > 1) {
-            //space between the x-coords of players
+            // space between the x-coords of players
             spacing = (max - min) / (double) (numP - 1);
             variable = min + player * spacing;
         } else {
             spacing = ((max - min) / 2);
             variable = min + spacing;
         }
-        
+
         int rotations = (position / Settings.getInstance().rowLength + 2) % 4;
         position %= Settings.getInstance().rowLength;
-        
+
         double offsetX;
         double offsetY;
-        
+
         double xLength;
         double yLength;
-        
-        //special case for corners
+
+        // special case for corners
         if (position == 0) {
             offsetX = variable;
             offsetY = variable;
-            
+
             xLength = longSide;
             yLength = longSide;
-        }
-        else {
+        } else {
             offsetX = 0.5f;
             offsetY = variable;
-            
+
             xLength = shortSide;
             yLength = longSide;
         }
-        
+
         for (int i = 0; i < rotations; i++) {
-            //recalculate the offsets and swap the lengths
+            // recalculate the offsets and swap the lengths
             double temp = offsetX;
             offsetX = 1 - offsetY;
             offsetY = temp;
-            
+
             temp = xLength;
-            
+
             xLength = yLength;
             yLength = temp;
         }
-        
-        //System.out.println("Spacing = " + spacing);
-        //the players are on the middle vertical axis with the calculated x coordinate
-        
-        log(Level.INFO, "Relative offset: "  + offsetX + ", " + offsetY);
-        log(Level.INFO, "Offset factor: "  + xLength + ", " + yLength);
-         
+
+        // System.out.println("Spacing = " + spacing);
+        // the players are on the middle vertical axis with the calculated x coordinate
+
+        log(Level.INFO, "Relative offset: " + offsetX + ", " + offsetY);
+        log(Level.INFO, "Offset factor: " + xLength + ", " + yLength);
+
         return new DoublePair(offsetX * xLength, offsetY * yLength);
     }
 
@@ -284,31 +267,24 @@ public class OnRoll extends Drawer {
         diceLabel2.setGraphic(new ImageView(diceFace2));
 
         Settings.toggleRollDiceButton();
-    } 
-    
-    public void showBuyButton(){
-        if(gameLogic.isAbleToBuyField()){
-            
-        
-        currentField = (OwnableField) this.getCurrentField();
-        PolyMonyPopup.show 
-        (
-            "Do you want to buy " + currentField.getName()+ " for " + currentField.getPrice() +"?",
-            (b) -> {
-               if(b) gameLogic.buyField();
-               PolyMonyDrawer.getInstance().onNextTurn.getPlayerInfo(gameLogic.getCurrentPlayer());
-            }
-        );
-        }
-        
-    }
-    
-    public Field getCurrentField(){
-        return gameLogic.getNthField(gameLogic.getCurrentPlayer().getPosition());
     }
 
-    //TODO move this method into a better situated class
-    private int getPlayerStrip(int index) {
-        return index / Settings.getInstance().rowLength;
+    public void showBuyButton() {
+        if (gameLogic.isAbleToBuyField()) {
+
+            currentField = (OwnableField) this.getCurrentField();
+            PolyMonyPopup.show(
+                    "Do you want to buy " + currentField.getName() + " for " + currentField.getPrice() + "?",
+                    (b) -> {
+                        if (b)
+                            gameLogic.buyField();
+                        PolyMonyDrawer.getInstance().onNextTurn.getPlayerInfo(gameLogic.getCurrentPlayer());
+                    });
+        }
+
+    }
+
+    public Field getCurrentField() {
+        return gameLogic.getNthField(gameLogic.getCurrentPlayer().getPosition());
     }
 }

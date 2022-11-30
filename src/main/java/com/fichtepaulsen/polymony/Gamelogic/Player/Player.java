@@ -3,28 +3,29 @@ package com.fichtepaulsen.polymony.Gamelogic.Player;
 import javafx.scene.paint.Color;
 
 public abstract class Player {
-    
+
     private int position;
     private int utilitiesOwned;
     private int balance;
     private int trainstationOwned;
-    //private boolean incarcerated;
-    private int amountPrisonFreeCard; 
-    private int playerIndex;
+    // private boolean incarcerated;
+    private int amountPrisonFreeCard;
+    private final int playerIndex;
     private boolean isInPrison;
-    //Counts doublet attempts in prison
-    private int prisonAttemptCounter;                                           
-    private int doubletsCounter;     
-    private Color color;
+    // Counts doublet attempts in prison
+    private int prisonAttemptCounter;
+    private int doubletsCounter;
+    private final Color color;
 
-    public Player(int position, int balance, int index){
+    public Player(int position, int balance, int index) {
         this.position = position;
         this.balance = balance;
         this.playerIndex = index;
         this.isInPrison = false;
-        this.color = Color.rgb( (int) (Math.random()*255)+1,(int) (Math.random()*255)+1,(int) (Math.random()*255)+1);
+        this.color = Color.rgb((int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1,
+                (int) (Math.random() * 255) + 1);
     }
-    
+
     public int getAmountPrisonFreeCard() {
         return amountPrisonFreeCard;
     }
@@ -32,18 +33,19 @@ public abstract class Player {
     public void setAmountPrisonFreeCard(int amountPrisonFreeCard) {
         this.amountPrisonFreeCard = amountPrisonFreeCard;
     }
-/*
-    public boolean isIncarcerated() {
-        return incarcerated;
-    }
-    public Color getColor(){
-        return this.color;
-    }
 
-    public void setIncarcerated(boolean incarcerated) {
-        this.incarcerated = incarcerated;
-    }
-*/
+    /*
+     * public boolean isIncarcerated() {
+     * return incarcerated;
+     * }
+     * public Color getColor(){
+     * return this.color;
+     * }
+     * 
+     * public void setIncarcerated(boolean incarcerated) {
+     * this.incarcerated = incarcerated;
+     * }
+     */
     public int getUtilitiesOwned() {
         return utilitiesOwned;
     }
@@ -63,11 +65,11 @@ public abstract class Player {
     public int getBalance() {
         return balance;
     }
-    
+
     public void setBalance(int balance) {
         this.balance = balance;
     }
-    
+
     public void changeBalance(int money) {
         this.balance += money;
     }
@@ -79,49 +81,49 @@ public abstract class Player {
     public void setPosition(int position) {
         this.position = position;
     }
-    
-    public int getIndex(){
+
+    public int getIndex() {
         return playerIndex;
     }
-    
-    public void setInPrison(){
-       this.setPosition(10);
-       this.isInPrison=true; 
-    } 
-    
-    public void setOutOfPrison(){
-       this.isInPrison=false; 
+
+    public void setInPrison() {
+        this.setPosition(10);
+        this.isInPrison = true;
     }
-    
-    public boolean getIsInPrison(){
+
+    public void setOutOfPrison() {
+        this.isInPrison = false;
+    }
+
+    public boolean getIsInPrison() {
         return this.isInPrison;
     }
-    
-    public void incrementPrisonAttemptCounter(){
+
+    public void incrementPrisonAttemptCounter() {
         prisonAttemptCounter++;
     }
-    
-    public int getPrisonAttemptCounter(){
+
+    public int getPrisonAttemptCounter() {
         return prisonAttemptCounter;
     }
-    
-    public void setPrisonAttemptCounter(int ac){
-        this.prisonAttemptCounter=ac; 
+
+    public void setPrisonAttemptCounter(int ac) {
+        this.prisonAttemptCounter = ac;
     }
-    
-    public void incrementDoubletsCounter(){
+
+    public void incrementDoubletsCounter() {
         doubletsCounter++;
     }
-    
-    public int getDoubletsCounter(){
+
+    public int getDoubletsCounter() {
         return doubletsCounter;
     }
-    
-    public void setDoubletsCounter(int dc){
-        this.doubletsCounter=dc; 
+
+    public void setDoubletsCounter(int dc) {
+        this.doubletsCounter = dc;
     }
-    
-    public Color getColor(){
+
+    public Color getColor() {
         return this.color;
     }
 }

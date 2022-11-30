@@ -13,29 +13,29 @@ import javafx.stage.StageStyle;
 
 public class PolyMonyPopup {
     public static Stage stage;
-    
-//        PolyMonyPopup.show 
-//        (
-//            "Do you really want to buy a house?",
-//            (b) -> {
-//                System.out.println(b);
-//            }
-//        );
+
+    // PolyMonyPopup.show
+    // (
+    // "Do you really want to buy a house?",
+    // (b) -> {
+    // System.out.println(b);
+    // }
+    // );
     public static void show(String question, Consumer<Boolean> onButton) {
         final Stage dialog = new Stage();
-        
+
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.initOwner(stage);
-        
-        dialog.setOnCloseRequest(e -> onButton.accept(false));        
+
+        dialog.setOnCloseRequest(e -> onButton.accept(false));
 
         VBox dialogVbox = new VBox(20);
         dialogVbox.setAlignment(Pos.CENTER);
-        
+
         HBox buttonHBox = new HBox(20);
         buttonHBox.setAlignment(Pos.CENTER);
-        
+
         Button show = new Button("Yes");
         show.setOnAction(e -> {
             onButton.accept(true);

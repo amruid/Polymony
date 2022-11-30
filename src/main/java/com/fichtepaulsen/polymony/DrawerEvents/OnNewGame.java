@@ -15,31 +15,31 @@ public class OnNewGame extends Drawer {
     public OnNewGame(GameInterface ga, Stage st) {
         super(ga, st);
     }
-    
+
     public Parent parent;
     public Scene mScene;
-    
+
     @Override
-    public void handle () {
-        
-        //actually start the game with the set amount of players from the settings
+    public void handle() {
+
+        // actually start the game with the set amount of players from the settings
         this.gameLogic.startGame(Settings.getInstance().numberOfPlayers);
-        
+
         Parent parentRoot = null;
-        
+
         try {
             parentRoot = FXMLLoader.load(getClass().getResource("/fxml/Gamefield.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(OnNewGame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         Scene scene = new Scene(parentRoot);
         scene.getStylesheets().add("/styles/Styles.css");
-        
+
         mScene = scene;
-        
+
         this.stage.setScene(scene);
         this.stage.show();
-        this.stage.centerOnScreen();    
+        this.stage.centerOnScreen();
     }
 }
